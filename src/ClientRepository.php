@@ -94,6 +94,7 @@ class ClientRepository
     public function create($userId, $name, $redirect, $personalAccess = false, $password = false)
     {
         $client = (new Client)->forceFill([
+            'id' => md5($userId.$name.date('YmdHis')),
             'user_id' => $userId,
             'name' => $name,
             'secret' => str_random(40),
