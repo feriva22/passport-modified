@@ -25,7 +25,10 @@ class CheckScopes
 
         foreach ($scopes as $scope) {
             if (! $request->user()->tokenCan($scope)) {
-                throw new MissingScopeException($scope);
+                return response()->json([
+                    'code' => 403,
+                    'message' => 'Anda Tidak punya Hak untuk mengakses modul ini!'
+                ], 401);
             }
         }
 

@@ -16,7 +16,7 @@ class CheckClientCredentials
      *
      * @var \League\OAuth2\Server\ResourceServer
      */
-    protected $server;
+    private $server;
 
     /**
      * Create a new middleware instance.
@@ -45,7 +45,10 @@ class CheckClientCredentials
         try {
             $psr = $this->server->validateAuthenticatedRequest($psr);
         } catch (OAuthServerException $e) {
-            throw new AuthenticationException;
+            return response()->json([
+                'code' => 401,
+                'message' => 'Token salah atau sudah expired!'
+            ], 401);
         }
 
         $this->validateScopes($psr, $scopes);
@@ -56,7 +59,7 @@ class CheckClientCredentials
     /**
      * Validate the scopes on the incoming request.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $psr
+     * @param  \Psr\Http\Message\ResponseInterface $psr
      * @param  array  $scopes
      * @return void
      * @throws \Laravel\Passport\Exceptions\MissingScopeException
@@ -69,7 +72,10 @@ class CheckClientCredentials
 
         foreach ($scopes as $scope) {
             if (! in_array($scope, $tokenScopes)) {
-                throw new MissingScopeException($scope);
+                return response()->json([
+                    'code' => 403,
+                    'message' => 'Anda Tidak punya Hak untuk mengakses modul ini!'
+                ], 401);
             }
         }
     }

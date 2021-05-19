@@ -28,6 +28,9 @@ class CheckForAnyScope
             }
         }
 
-        throw new MissingScopeException($scopes);
+        return response()->json([
+            'code' => 403,
+            'message' => 'Anda Tidak punya Hak untuk mengakses modul ini!'
+        ], 401);
     }
 }
